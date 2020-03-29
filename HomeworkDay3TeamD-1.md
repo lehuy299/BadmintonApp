@@ -16,15 +16,21 @@ logic/server: cityId, venueId, courtId, userId/playerId, bookingId, statusId.
 * structure (if any), when response contains (potentially) structured data,
 known/agreed upon by client and server
 ### _getAvailableSlots_
-* __Description__: request a City, a date, hand out all available slots.
-* __security/caller__: Badminton Player
-* __request__: getASlots(City, date)
+* __Description__: for a given day and cityId, get all the slots available:
+* __security/caller__: anonymous
+* __request__: getSlots(day, cityId)
 * __response__: 
-  * __success__: if the request is approved -> SuccessCode + cityname, array of (centralID, venueSlots), where venueSlots is an array of (venueID, courtSlots), where courseSlots is an array of (courseID, Slots), where Slots is an array of (Start hour, End hour)
+  * __success__: successCode + array of (centreId, venueSlots), where
+venueSlots is an array of (venueId, courtSlots), where
+courtSlots is an array of (courtId, slots), where
+slots is an array of (startHour, endHour)
   * __error__: if fail
 	 the server will send back malformed request syntax, where this error occurs when the player enters city name and date in a wrong format 
 	 there is no array of info appear in the screen -> missing request-> can’t get available slot form the storage.
-
+*_Test_:
+- testgetAvailableSlotssuccess: if the cityId is valid and day is correct ( not in the past or in correct format) then the application return the array of (centreId, venueSlots)
+- testgetAvailableSlotsunvalidcityId : if the cityId is not valid (not exist) then 
+- testgetAvailableSlots
 ### _createBooking_
 * __Description__: for a given day, court, start-end hour, player info, making a booking
 * __security/caller__: Badminton Player
