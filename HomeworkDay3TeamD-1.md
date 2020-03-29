@@ -60,9 +60,9 @@ get all the bookings:
   * __error__:  if fail
 	 when the staff or player request to retrieve all booking at that day, the screen will pop up a message DNS Server isn’t responding
 *_Test_:
-_testgetvalidPlayerBookingsuccess:if the playerID,date and city is valid,then the server print out the list of all players booking on that date.
-_testgetunvalidPlayerBooking:if the playerID,date and city is unvalid,then return to 
-_testgetPlayerBooking
+- testgetvalidPlayerBookingsuccess:if the playerID,date and city is valid,then the server print out the list of all players booking on that date.
+- testgetunvalidPlayerBooking:if the playerID,date and city is unvalid,then return to 
+- testgetPlayerBooking
 
 ### _getVenueBooking_
 * __Description__: : for a given venueID and date, get all the bookings of that venue
