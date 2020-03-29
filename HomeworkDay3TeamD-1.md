@@ -59,9 +59,9 @@ get all the bookings:
   * __success__: SuccessCode + array of (centreId, venueBookings), where venueBookings is an array of (venueID, courtBookings), where courtBookings is an array of (courtID, bookings), where bookings is an array of (Start hour, End hour)
   * __error__:  if fail
 	 when the staff or player request to retrieve all booking at that day, the screen will pop up a message DNS Server isn’t responding
-*_test_:
-_testgetvalidPlayerBookingsuccess_:if the playerID,date and city is valid,then the server print out the list of all players booking on that date.
-_testgetunvalidPlayerBooking_:if the playerID,date and city is unvalid,then return to 
+*_Test_:
+_testgetvalidPlayerBookingsuccess:if the playerID,date and city is valid,then the server print out the list of all players booking on that date.
+_testgetunvalidPlayerBooking:if the playerID,date and city is unvalid,then return to 
 _testgetPlayerBooking
 
 ### _getVenueBooking_
