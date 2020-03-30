@@ -32,7 +32,7 @@ slots is an array of (startHour, endHour)
   * __testgetAvailableSlotssuccess__: if the cityId is valid and day is correct ( not in the past or in correct format) then the application return the array of (centreId, venueSlots)
   * __testgetAvailableSlotsunvalidcityId__:error if the input parameter cityId is invalid (not exist)
   * __testgetAvailableSlotsdayintheast__:error if the input parameter day is in the past.
-  * __testgetAvailableSlotsunvalidday__: error if the input parameter day is invail (example of dd/mm/yyyy :32/01/2020 , 12/14/2020)
+  * __testgetAvailableSlotsunvalidday__: error if the input parameter day is invalid (example of dd/mm/yyyy :32/01/2020 , 12/14/2020)
   * __testgetAvailableSlotsunvalidSlot__: erorr if there is less than 45 minute slot ( example there are 2 booking : 7:00-> 9:00 and 9:30 -> 10:30 can not book the court from 9:00 to 9:30)
   
 ### _createBooking_
@@ -69,9 +69,9 @@ get all the bookings:
 	 when the staff or player request to retrieve all booking at that day, the screen will pop up a message DNS Server isn’t responding
 * __Testing__:
   * __testgetvalidPlayerBookingsuccess__:if the playerID,date and city is valid,then the server print out the list of all players booking on that date.
-  * __testgetunvalidPlayerBooking__:if the playerID,date and city is unvalid,then return to 
-- testgetPlayerBooking
-
+  * __testgetunvalidPlayerBooking__:if the date is unvalid,then the server print out the list of all players booking with wrong date or the server isn't responding.
+  *__testgetunvalidPlayerBooking__:if the city is unvalid,the server print out the list of all players booking with wrong city or the server isn't responding.
+  *__testgetunvalidPlayerBooking__:ì the playerID is unvalid,then the server print out the list of all players with wrong player or the server isn't responding.
 ### _getVenueBooking_
 * __Description__: : for a given venueID and date, get all the bookings of that venue
 * __security/caller__: Staff
