@@ -112,10 +112,14 @@ THEN
    SET MESSAGE_TEXT = 'Start time can not after end time!';
 END IF;
 
-IF timestampdiff(MINUTE,startTime,endTime) < 45
+IF TIMESTAMPDIFF(MINUTE,startTime,endTime) < 45 
 THEN 
 	SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = 'Court must be longer than 45 minutes';
+    SET MESSAGE_TEXT = 'Booking must be longer than 45 minutes';
+ELSEIF TIMESTAMPDIFF(MINUTE,startTime,endTime) > 90
+THEN 
+	SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Booking must not be longer than 90 minutes';
 END IF;
 
 IF TotalBookings >= 3
@@ -136,21 +140,25 @@ END //
 DELIMITER ;
 
 /* scenario */
-INSERT INTO court (name) values ("Court#1");
-INSERT INTO court (name) values ("Court#2");
-INSERT INTO court (name) values ("Court#3");
+INSERT INTO city (name) values ("City#1");
+INSERT INTO city (name) values ("City#2");
+INSERT INTO city (name) values ("City#3");
+
+INSERT INTO center (name,city) values ("Center#1",1);
+INSERT INTO center (name,city) values ("Center2",2);
+INSERT INTO center (name,city) values ("Center3",3);
+
+INSERT INTO court (name,center) values ("Court#1",1);
+INSERT INTO court (name,center) values ("Court#2",2);
+INSERT INTO court (name,center) values ("Court#3",3);
 
 INSERT INTO customer (name) values ("Customer#A");
 INSERT INTO customer (name) values ("Customer#B");
 INSERT INTO customer (name) values ("Customer#C");
 
-INSERT INTO center (name) values ("Center#1");
-INSERT INTO center (name) values ("Center2");
-INSERT INTO center (name) values ("Center3");
 
-INSERT INTO city (name) values ("City#1");
-INSERT INTO city (name) values ("City#2");
-INSERT INTO city (name) values ("City#3");
+
+
 
 INSERT INTO booking (date,startHour,endHour,startMin,endMin,court,customer,payment_status,timestamp)
 values ("2020-03-31",20,21,00,30,2,1,"Unpaid","2020-02-28 14:13:00");
@@ -176,8 +184,11 @@ call CreateBooking("2020-04-01", 7, 0, 21, 15, "Court#1", "Customer#A",
 call CreateBooking("2020-04-01", 8, 0, 7, 0, "Court#1", "Customer#A", 
 	"2020-03-29 09:27:00");
    /* error: Start time can not after end time */
-call CreateBooking("2020-04-05", 8, 0, 10, 0, "Court#1","Customer#A", 
-	"2020-03-29 09:27:00");
+call CreateBooking("2020-04-05",17,30,18,0,"Court#3","Customer#C","2020-02-20 15:50:00");
+   /* error : Booking can not be less than 45 minutes */
+call CreateBooking("2020-04-05",15,30,18,0,"Court#3","Customer#C","2020-02-20 15:50:00");
+/* error : Booking must not be longer than 90 minutes */
+call CreateBooking("2020-04-05", 8, 0, 10, 0, "Court#1","Customer#A","2020-03-29 09:27:00");
    /*error : Customer had 3 unpaid booking*/
 call CreateBooking("2020-04-05",11,30,13,00,"Court#1","Customer#B","2020-03-30 15:30:00");
    /*error : Customer had 1 pending booking in the past*/
@@ -200,18 +211,19 @@ IF  pbooking NOT IN (
 THEN SIGNAL SQLSTATE '45000'
    SET MESSAGE_TEXT = 'Booking did not exist';
 END IF;
-IF timestampdiff(HOUR,(
+IF TIMESTAMPDIFF(HOUR,(
 	SELECT date_add(date_add(date, INTERVAL startHour HOUR), INTERVAL startMin MINUTE) 
 	FROM booking_app.booking 
 	WHERE booking_id= pbooking ),date(now())) < 24
 THEN SIGNAL SQLSTATE '45000'
    SET MESSAGE_TEXT = 'Customer can only cancel booking more than 24 hours before start time!';
 END IF;
+
 END //
 DELIMITER ;
 
 /* test */
-call CancelBooking(1);
+call CancelBooking(5);
 /*error: Customer can only cancel booking more than 24 hours before start time*/
 CALL CancelBooking(7);
 /*error: Booking did not exist*/
