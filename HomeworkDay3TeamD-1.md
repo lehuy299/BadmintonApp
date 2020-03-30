@@ -70,8 +70,8 @@ get all the bookings:
 * __Testing__:
   * __testgetvalidPlayerBookingsuccess__:if the playerID,date and city is valid,then the server print out the list of all players booking on that date.
   * __testgetunvalidPlayerBooking__:if the date is unvalid,then the server print out the list of all players booking with wrong date or the server isn't responding.
-  *__testgetunvalidPlayerBooking__:if the city is unvalid,the server print out the list of all players booking with wrong city or the server isn't responding.
-  *__testgetunvalidPlayerBooking__:ì the playerID is unvalid,then the server print out the list of all players with wrong player or the server isn't responding.
+  * __testgetunvalidPlayerBooking__:if the city is unvalid,the server print out the list of all players booking with wrong city or the server isn't responding.
+  * __testgetunvalidPlayerBooking__:ì the playerID is unvalid,then the server print out the list of all players with wrong player or the server isn't responding.
 ### _getVenueBooking_
 * __Description__: : for a given venueID and date, get all the bookings of that venue
 * __security/caller__: Staff
