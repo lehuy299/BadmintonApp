@@ -29,8 +29,10 @@ slots is an array of (startHour, endHour)
 	 there is no array of info appear in the screen -> missing request-> can’t get available slot form the storage.
 *_Test_:
 - testgetAvailableSlotssuccess: if the cityId is valid and day is correct ( not in the past or in correct format) then the application return the array of (centreId, venueSlots)
-- testgetAvailableSlotsunvalidcityId : if the cityId is not valid (not exist) then 
-- testgetAvailableSlots
+- testgetAvailableSlotsunvalidcityId :error if the input parameter cityId is invalid (not exist)
+- testgetAvailableSlotsdayintheast:error if the input parameter day is in the past.
+- testgetAvailableSlotsunvalidday: error if the input parameter day is invail (example of dd/mm/yyyy :32/01/2020 , 12/14/2020)
+- testgetAvailableSlotsunvalidSlot : erorr if there is less than 45 minute slot ( example there are 2 booking : 7:00-> 9:00 and 9:30 -> 10:30 can not book the court from 9:00 to 9:30)
 ### _createBooking_
 * __Description__: for a given day, court, start-end hour, player info, making a booking
 * __security/caller__: Badminton Player
@@ -50,7 +52,10 @@ get all the bookings:
   * __success__: SuccessCode + Cancel Successful
   * __error__:if fail 
 	 the cancelBooking is rejected because the player cancels after the deadline (before 24h of the starting-time).
-
+*_Testing_:
+-testcancelBookingsuccess: If input parameter bookingID is valid and startTime of the booking must be more than 24 hours counting from the time customer want to cancel.
+-testcancelBookingbookingID: error if bookingId is incorrect or not existed.
+-testcancelBooking24hoursless: error if the startTime of the booking is less than 24 hours from the cancelling time.
 ### _getPlayerBooking_
 * __Description__: for a given playerID, date and city, view all the bookings for that day
 * __security/caller__: Badminton Players/Staff
