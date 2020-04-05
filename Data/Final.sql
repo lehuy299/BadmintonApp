@@ -1,3 +1,49 @@
+/*create City:
+- CityId existed : createCity-FK1
+
+createCenter:
+-CityId did not exist: createCityCenter - FK1
+-CenterId existed : createCityCenter-FK2
+
+createPlayer:
+-PlayerId existed : createPlayer - FK1
+
+createStaff:
+-CityId did not exist : createStaff -FK1
+-CenterId did not exist : createStaff -FK2
+-StaffId existed : createStaff -FK3
+-CenterId NOT belong to CityId : createStaff -001
+
+createBooking:
+-PlayerId did not exist : createBooking-FK1
+-CityId did not exist : createBooking-FK2
+-CenterId did not exist : createBooking-FK3
+-CourtId did not exist : createBooking-FK4
+-BookingId existed : createBooking-FK5
+-StartTime in the past : createBooking-001
+-StartTime before Opening time : createBooking-002
+-EndTime after Closing time : createBooking-003
+-StartTime after EndTime : createBooking-004
+-Booking not 45,60,90 minutes: createBooking-005
+-Center NOT belong to city : createBooking-006
+-Court NOT belong to center :createBooking-007
+-Booking overlap: createBooking-008
+-3 Bookings in advance : createBooking-009
+-1 pending booking in the past: createBooking-010
+
+cancelBooking
+-Booking did not exist : cancelBooking-FK1
+-player did not exist : cancelBooking-FK2
+-Booking NOT belong to Player cancelBooking-001
+-Less than 24h before startTime cancelBooking-002
+
+updateBookingStatus
+-Booking did not exist : updateBookingStatus-FK1
+-city did not exist : updateBookingStatus-FK2
+-center did not exist : updateBookingStatus-FK3
+-court did not exist : updateBookingStatus-FK4
+-Booking NOT belong to center  : updateBookingStatus-001
+-Center NOT belong to city: updateBookingStatus-002*/
 DROP DATABASE booking_app;
 CREATE DATABASE booking_app;
 USE booking_app;
