@@ -51,13 +51,13 @@ USE booking_app;
 DROP TABLE IF EXISTS player;
 CREATE TABLE player(
   player_id varchar(50) NOT NULL PRIMARY KEY,
-  name varchar(50) NOT NULL UNIQUE
+  name varchar(50) UNIQUE
 );
 
 DROP TABLE IF EXISTS city;
 CREATE TABLE city(
   city_id varchar(50) NOT NULL PRIMARY KEY,
-  name varchar(50)UNIQUE
+  name varchar(50) UNIQUE
 );
 
 DROP TABLE IF EXISTS center;
