@@ -176,6 +176,29 @@ END IF;
 END //
 DELIMITER ;
 
+/* create new court */
+DROP PROCEDURE IF EXISTS createCourt;
+DELIMITER //
+CREATE PROCEDURE createCourt(in pcourt varchar(50), pcenter varchar(50))
+BEGIN
+DECLARE EXIT HANDLER FOR SQLEXCEPTION
+BEGIN
+  GET STACKED DIAGNOSTICS CONDITION 1 @p1 = RETURNED_SQLSTATE, @p2 = MESSAGE_TEXT;
+  SELECT @p1, @p2;
+  ROLLBACK;
+END;
+START TRANSACTION;
+/* court existed */
+IF pcourt  IN (SELECT court_id from court)
+THEN
+	SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'createCourt_FK1';
+
+ELSE INSERT INTO court (court_id,center) values (pcourt,pcenter);
+END IF;
+END //
+DELIMITER ; 
+
 /* Function check center belong to that city*/
 DROP FUNCTION IF EXISTS Center_belongto_City;
 DELIMITER //
