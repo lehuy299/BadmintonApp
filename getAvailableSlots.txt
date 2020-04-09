@@ -1,36 +1,18 @@
-public string getAvailableSlots(String date, int cityId)
-{
-	String Result = "";
-	DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-	Date bookDay;	
-	try {
-		bookDay = dateFormat.parse(date);
-	}
-	catch {		
-		return "getAvailableSlotsunvalidday";
-	}
-	if(bookDay.compareTo(dateFormat.format(new Date)) > 0) { //Choosen date < current date
-        return "getAvailableSlotsdayinthepast";
-    }
-	else {
-		//Select all centers in current city and select all courts in all centers
-		ResultSet centerRS = DBA.executeQuery("SELECT center_id FROM center WHERE city = " + cityId); 
-		if (centerRS.getRow() == 0) {
-			return "getAvailableSlotsunvalidcityId";
-		}
-		else {
-			while (centerRS.next()) {
-				String centerid = centerRS.getString("center_id");
-				ResultSet courtRS = DBA.executeQuery("SELECT court_id FROM court WHERE center = " + centerid);
-				if (courtRS.getRow() > 0) {
-					while (courtRS.next()) {
-						String courtid = courtRS.getString("court_id");
-						ResultSet bookingRs = DBA.executeQuery("SELECT * FROM booking WHERE court  = " + courtid);
-						
-					}
-				}
-			}
-		}
-	}
-	return Result;	
-}
+Court[] CourtList // List of court in city
+SlotList[] SlotsList // List of return slotsList
+Time OpeningTime = 07:00:00; //Center opening time
+Time ClosingTime = 21:00:00; //Center closing time
+Time MinumumTime = 00:45:00; //Minimum time for one booking slot
+
+for Court in CourtList:
+	if (Court.Bookings.Count > 0):
+		for i:=0 to Court.Bookings.Count:
+			if (i == 0 and Court.Bookings[i].StartTime - OpeningTime >= MinumumTime):
+				SlotsList <- Slot(Court.ID, Court.CenterID, Court.CityID, OpeningTime, Court.Bookings[i].StartTime)
+			if (i == Count.Bookings.Count - 1 and ClosingTime - Count.Bookings[i].EndTime >= MinumumTime):
+				SlotsList <- Slot(Court.ID, Court.CenterID, Court.CityID, Court.Bookings[i].StartTime, ClosingTime)
+			if (i < Count.Bookings.Count - 1 and Court.Bookings[i+1].StartTime - Court.Bookings[i].EndTime >= MinumumTime):
+				SlotsList <- Slot(Court.ID, Court.CenterID, Court.CityID, Court.Bookings[i].EndTime, Court.Bookings[i+1].StartTime)
+	else:
+		SlotsList <- Slot(Court.ID, Court.CenterID, Court.CityID, OpeningTime, ClosingTime)
+return SlotsList;
