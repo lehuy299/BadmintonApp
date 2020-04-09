@@ -1,0 +1,36 @@
+public string getAvailableSlots(String date, int cityId)
+{
+	String Result = "";
+	DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	Date bookDay;	
+	try {
+		bookDay = dateFormat.parse(date);
+	}
+	catch {		
+		return "getAvailableSlotsunvalidday";
+	}
+	if(bookDay.compareTo(dateFormat.format(new Date)) > 0) { //Choosen date < current date
+        return "getAvailableSlotsdayinthepast";
+    }
+	else {
+		//Select all centers in current city and select all courts in all centers
+		ResultSet centerRS = DBA.executeQuery("SELECT center_id FROM center WHERE city = " + cityId); 
+		if (centerRS.getRow() == 0) {
+			return "getAvailableSlotsunvalidcityId";
+		}
+		else {
+			while (centerRS.next()) {
+				String centerid = centerRS.getString("center_id");
+				ResultSet courtRS = DBA.executeQuery("SELECT court_id FROM court WHERE center = " + centerid);
+				if (courtRS.getRow() > 0) {
+					while (courtRS.next()) {
+						String courtid = courtRS.getString("court_id");
+						ResultSet bookingRs = DBA.executeQuery("SELECT * FROM booking WHERE court  = " + courtid);
+						
+					}
+				}
+			}
+		}
+	}
+	return Result;	
+}
