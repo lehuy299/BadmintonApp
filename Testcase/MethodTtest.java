@@ -14,49 +14,33 @@ public class MethodTtest {
         assertTrue(result.isEmpty());
     }
 
-    @Test
-    public void getAvailableSlotTimeCheckOne() throws Exception{
-        Method Court = new Method();
-        Method Slot = new Method();
-        Court.delCourt();
-        Slot.delSlot();
-        Court.createCourt(1);
-        Slot.createSlot("SlotA1", 45, "07:00:00");
-        ArrayList<Integer> result = new ArrayList<Integer>();
-        result.add(0,Court.getCourt());
-        //result.add(1,Slot.getSlot());
-        System.out.println(result);
-        //assertTrue(result.get(0) == "Stadium1");
-        //assertTrue(result.get(1) == Slot.getSlot().get(0));
-    }
 
     @Test
-    public void getAvailableSlotTimeCheckTwo() throws Exception{
+    public void getAvailableSlotTimeCheckTwo() throws Exception {
         Method Court = new Method();
         Method Slot = new Method();
         Court.delCourt();
         Slot.delSlot();
-        Court.createCourt(2);
-        Slot.createSlot("SlotA1", 45, "21:00:00");
+        Court.createCourt("HaNoi");
+        Slot.createSlot("SlotA1", 45);
         System.out.println(Slot.getSlot());
-        //assertTrue(Court.getCourt() = 1);
-        //assertTrue(Slot.getSlot().get(0) == "SlotA1");
-        // assertTrue(Slot.getSlot().get(1) >= 45 && Slot.getSlot().get(1) <= 90);
-        // assertTrue(Slot.getSlot().get(0) == "21:00:00");
+        assertTrue(Court.getCourt() == "Hanoi");
+        assertTrue(Slot.getSlot() == "SlotA1");
+        assertTrue(Slot.getTime() >= 45 && Slot.getTime() <= 90);
     }
 
+
+    @Test
     public void getAvailableSlotTimeCheckThree() throws Exception{
-        Method Court = new Method();
-        Method Slot = new Method();
-        Court.delCourt();
-        Slot.delSlot();
-        Court.createCourt(2);
-        Slot.createSlot("SlotA1", 90, "12:00:00");
-        System.out.println(Slot.getSlot());
-        //assertTrue(Court.getCourt() = 1);
-        //assertTrue(Slot.getSlot().get(0) == "SlotA1");
-        // assertTrue(Slot.getSlot().get(1) >= 45 &&
-        // Slot.getSlot().get(1) <= 90);
-        // assertTrue(Slot.getSlot().get(0) == "21:00:00");
+        Method Court2 = new Method();
+        Method Slot2 = new Method();
+        Court2.delCourt();
+        Slot2.delSlot();
+        Court2.createCourt("Hanoi");
+        Slot2.createSlot("SlotA1", 90);
+        System.out.println(Slot2.getSlot());
+        assertTrue(Court2.getCourt() == "HaNoi");
+        assertTrue(Slot2.getSlot() == "SlotA1");
+        assertTrue(Slot2.getTime() >= 45 && Slot2.getTime() <= 90);
     }
 }
