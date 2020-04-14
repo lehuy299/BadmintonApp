@@ -41,7 +41,7 @@ public class MethodTtest {
         System.out.println(Slot.getSlot());
         //assertTrue(Court.getCourt() = 1);
         //assertTrue(Slot.getSlot().get(0) == "SlotA1");
-        // assertTrue(Slot.getSlot().get(1) >= 45);
+        // assertTrue(Slot.getSlot().get(1) >= 45 && Slot.getSlot().get(1) <= 90);
         // assertTrue(Slot.getSlot().get(0) == "21:00:00");
     }
 
@@ -51,11 +51,12 @@ public class MethodTtest {
         Court.delCourt();
         Slot.delSlot();
         Court.createCourt(2);
-        Slot.createSlot("SlotA1", 30, "12:00:00");
+        Slot.createSlot("SlotA1", 90, "12:00:00");
         System.out.println(Slot.getSlot());
         //assertTrue(Court.getCourt() = 1);
         //assertTrue(Slot.getSlot().get(0) == "SlotA1");
-        // assertTrue(Slot.getSlot().get(1) >= 45);
+        // assertTrue(Slot.getSlot().get(1) >= 45 &&
+        // Slot.getSlot().get(1) <= 90);
         // assertTrue(Slot.getSlot().get(0) == "21:00:00");
     }
 }
