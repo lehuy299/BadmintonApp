@@ -99,18 +99,19 @@ public ArrayList<Slot> getAllFreeSlots(Date bookDay, ArrayList<Court> BookingLis
 	Date OpeningTime = timeFormat.parse("07:00:00"); //Center opening time
 	Date ClosingTime = timeFormat.parse("21:00:00"); //Center closing time
 	int MinimumTime = 45; //Minimum time for one booking slot
+	int MaximumTime = 90; //Maximum time for one booking slot
 	
 	ArrayList<Slot> SlotList = new ArrayList<Slot>();
 	if (BookingList.size() > 0) {
 		for (int i = 0; i < BookingList.size(); i++) { 		      
 			if (BookingList[i].StartTime.getDayOfYear() == bookDay.getDayOfYear()) { //only check booking at selected date
-				if (i == 0 && getTimeDiffByMinute(OpeningTime, BookingList[i].StartTime) >= MinimumTime) {
+				if (i == 0 && getTimeDiffByMinute(OpeningTime, BookingList[i].StartTime) >= MinimumTime ) {
 					SlotList.add(new Slot(OpeningTime, BookingList[i].StartTime);
 				}
 				if (i == BookingList.size() - 1 && getTimeDiffByMinute(BookingList[i].EndTime, ClosingTime) >= MinimumTime) {
 					SlotList.add(new Slot(BookingList[i].StartTime, ClosingTime);
 				}
-				if (i < BookingList.size() - 1 && getTimeDiffByMinute(BookingList[i].EndTime, BookingList[i+1].StartTime) >= MinumumTime) {
+				if (i < BookingList.size() - 1 && getTimeDiffByMinute(BookingList[i].EndTime, BookingList[i+1].StartTime) >= MinumumTime && getTimeDiffByMinute(BookingList[i].EndTime, BookingList[i+1].StartTime) >= MaximumTime) {
 					SlotList.add(new Slot(BookingList[i].EndTime, BookingList[i+1].StartTime);
 				}
 			}
