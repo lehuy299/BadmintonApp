@@ -23,8 +23,8 @@ public class MethodTtest {
         Slot.delSlot();
         Court.createCourt("HaNoi");
         Slot.createSlot("SlotA1", 45);
-        System.out.println(Slot.getSlot());
-        assertTrue(Court.getCourt() == "Hanoi");
+        //System.out.println(Slot.getSlot());
+        assertTrue(Court.getCourt() == "HaNoi");
         assertTrue(Slot.getSlot() == "SlotA1");
         assertTrue(Slot.getTime() >= 45 && Slot.getTime() <= 90);
     }
@@ -38,8 +38,8 @@ public class MethodTtest {
         Slot2.delSlot();
         Court2.createCourt("Hanoi");
         Slot2.createSlot("SlotA1", 90);
-        System.out.println(Slot2.getSlot());
-        assertTrue(Court2.getCourt() == "HaNoi");
+        //System.out.println(Slot2.getSlot());
+        assertTrue(Court2.getCourt() == "Hanoi");
         assertTrue(Slot2.getSlot() == "SlotA1");
         assertTrue(Slot2.getTime() >= 45 && Slot2.getTime() <= 90);
     }

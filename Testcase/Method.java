@@ -1,40 +1,46 @@
 package com.Impalord;
+import org.junit.Test;
 
-import java.util.ArrayList;
+import java.awt.image.AreaAveragingScaleFilter;
+import java.util.*;
+import static org.junit.Assert.*;
 
-public class Method {
-    public String slot ;
-    public int time;
-    public String Court;
+public class MethodTtest {
 
-    public void  createSlot( String slot, int timebook){
-        slot = this.slot;
-        timebook = this.time;
-    }
 
-    public String  getSlot( ) {
-        return slot;
-    }
-
-    public  int getTime(){
-        return time;
+    @Test
+    public void getSlotEmpty() throws Exception{
+        ArrayList result = new ArrayList();
+        assertTrue(result.isEmpty());
     }
 
 
-    public String delSlot(){
-        slot = null;
-        return null;
-    }
-    public void  createCourt( String Court){
-        Court = this.Court;
+    @Test
+    public void getAvailableSlotTimeCheckTwo() throws Exception {
+        Method Court = new Method();
+        Method Slot = new Method();
+        Court.delCourt();
+        Slot.delSlot();
+        Court.createCourt("HaNoi");
+        Slot.createSlot("SlotA1", 45);
+        //System.out.println(Slot.getSlot());
+        assertTrue(Court.getCourt() == "HaNoi");
+        assertTrue(Slot.getSlot() == "SlotA1");
+        assertTrue(Slot.getTime() >= 45 && Slot.getTime() <= 90);
     }
 
-    public String getCourt() {
-        return Court;
-    }
 
-    public String delCourt(){
-        Court = null;
-        return Court;
+    @Test
+    public void getAvailableSlotTimeCheckThree() throws Exception{
+        Method Court2 = new Method();
+        Method Slot2 = new Method();
+        Court2.delCourt();
+        Slot2.delSlot();
+        Court2.createCourt("Hanoi");
+        Slot2.createSlot("SlotA1", 90);
+        //System.out.println(Slot2.getSlot());
+        assertTrue(Court2.getCourt() == "Hanoi");
+        assertTrue(Slot2.getSlot() == "SlotA1");
+        assertTrue(Slot2.getTime() >= 45 && Slot2.getTime() <= 90);
     }
 }
