@@ -2,11 +2,12 @@
 
 ### Homework Team D
 
-### _Kind of information that the Facebook API is needed for indentifying uniquely players:_
+### _Kind of information that the Facebook API is needed for uniquely indentifying players:_
 * __Facebook ID.__
 * __Phone number.__
 * __Address.__
 * __Day of Birth.__
+*(The information from the players' Facebook profiles)
   
 
 ### _Advantage and Disadvantage of Facebook Login_
@@ -22,6 +23,6 @@
 
 ### _The risk and how to mitigate_
 * __When the players login by Facebook,the token is not expired__: 
-    * __Solution:We will use Clock.When the players are not on this app for a long time,then the Clock will make the Facebook log out automatically.__
-* __Someone will use the bad purposes to hack the players'Facebook accounts__:  
-    * __Solution:If the players can't login by Facebook,they should login by another ways such as traditional login,login by Google account.__
+    * __Solution:We will use Timer.When the players are not using this app for an amount of time,then the Timer will log out the Facebook account from the app automatically.__
+* __When login by  using Facebook is not an option__:  
+    * __Solution:We will suggest the players to link the Facebook account with the normal account so that when the players can login the same account either using Facebook or normal account.__
