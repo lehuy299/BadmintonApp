@@ -7,7 +7,7 @@
 * __Phone number.__
 * __Address.__
 * __Day of Birth.__
-*(The information from the players' Facebook profiles)
+*__(The information from the players' Facebook profiles)__
   
 
 ### _Advantage and Disadvantage of Facebook Login_
