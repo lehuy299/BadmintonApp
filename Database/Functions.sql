@@ -1,7 +1,7 @@
-/*Function check valid parameter*/
-DROP FUNCTION IF EXISTS isValid;
+/*Function check valid id*/
+DROP FUNCTION IF EXISTS isValidId;
 DELIMITER //
-CREATE FUNCTION isValid(pid varchar(50)) 
+CREATE FUNCTION isValidId(pid varchar(50)) 
 RETURNS int DETERMINISTIC
 BEGIN
 DECLARE result int DEFAULT 0;
@@ -10,18 +10,26 @@ RETURN result;
 END //
 DELIMITER ;
 
-/* Function check center belong to that city*/
-DROP FUNCTION IF EXISTS Center_EXISTED_City;
+/*Function check valid name*/
+DROP FUNCTION IF EXISTS isValidName;
 DELIMITER //
-CREATE FUNCTION Center_EXISTED_City(pcenter varchar(50),pcity varchar(50)) 
+CREATE FUNCTION isValidName(pname varchar(50)) 
 RETURNS int DETERMINISTIC
 BEGIN
 DECLARE result int DEFAULT 0;
-SELECT 1
-FROM center
-WHERE center_id = pcenter
-AND city = pcity
-INTO result;
+SELECT pname REGEXP '^[a-zA-Z]' INTO result;
+RETURN result;
+END //
+DELIMITER ;
+
+/*Function check valid email*/
+DROP FUNCTION IF EXISTS isValidEmail;
+DELIMITER //
+CREATE FUNCTION isValidEmail(pemail varchar(50)) 
+RETURNS int DETERMINISTIC
+BEGIN
+DECLARE result int DEFAULT 0;
+SELECT pemail REGEXP '^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$' INTO result;
 RETURN result;
 END //
 DELIMITER ;
