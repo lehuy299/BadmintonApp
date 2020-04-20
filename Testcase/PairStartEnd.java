@@ -21,4 +21,11 @@ public class PairStartEnd {
     public  void setEndTime(LocalTime endtime){
         this.EndTime = endtime;
     }
+    public boolean isValid(){
+        if (StartTime != null ){
+            return true;
+        }
+        else
+            return false;
+    }
 }
