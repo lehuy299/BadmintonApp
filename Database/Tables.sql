@@ -4,7 +4,9 @@ USE booking_app;
 
 DROP TABLE IF EXISTS player;
 CREATE TABLE player(
-	player_id varchar(50) NOT NULL PRIMARY KEY
+	player_id varchar(50) NOT NULL PRIMARY KEY,
+    	name varchar(50) NOT NULL,
+    	email varchar(100) NOT NULL
 );
 
 DROP TABLE IF EXISTS city;
