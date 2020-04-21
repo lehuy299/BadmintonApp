@@ -152,8 +152,7 @@ DELIMITER ;
 /* Create Booking*/
 DROP PROCEDURE IF EXISTS createBooking;
 DELIMITER //
-CREATE PROCEDURE createBooking(in pbooking varchar(50),
-in pdate date, in pstart time, in pend time,in pcity varchar(50),
+CREATE PROCEDURE createBooking(in pdate date, in pstart time, in pend time,in pcity varchar(50),
  in pcenter varchar(50),in pcourt varchar(50), in pplayer varchar(50),out result int)
 BEGIN
 DECLARE openTime datetime;
@@ -164,80 +163,72 @@ SELECT
 SELECT 
   MAKETIME(21,0,0) into closeTime;  
 
-/*Invalid booking*/
-IF isValidId(pbooking) = 0 
-THEN SET result =601;
-
 /*Invalid city*/
-ELSEIF isValidId(pcity) = 0 
-THEN SET result =602;
+IF isValidId(pcity) = 0 
+THEN SET result =601;
 
 /*Invalid center*/
 ELSEIF isValidId(pcenter) = 0 
-THEN SET result = 603;
+THEN SET result = 602;
 
 /*Invalid court*/
 ELSEIF isValidId(pcourt) = 0 
-THEN SET result =604;
+THEN SET result =603;
 
 /*Invalid player*/
 ELSEIF isValidId(pplayer) = 0 
-THEN SET result =605;
+THEN SET result =604;
 
 /* player NOT exists */
 ELSEIF pplayer NOT IN (SELECT player_id FROM player)
-THEN SET result = 606;
+THEN SET result = 605;
 
 /* city NOT exists */
 ELSEIF pcity NOT IN (SELECT city_id FROM city)
-THEN SET result = 607;
+THEN SET result = 606;
 
 /* center NOT exists in that city */
 ELSEIF pcenter NOT IN (SELECT center_id FROM center WHERE city = pcity) 
-THEN SET result = 608;
+THEN SET result = 607;
 
 /* court NOT exists */
 ELSEIF pcourt NOT IN (SELECT court_id FROM court WHERE center = pcenter AND city = pcity)
-THEN SET result = 609;
-
-/* booking ALREADY exists */
-ELSEIF pbooking IN (SELECT booking_id FROM booking)
-THEN SET result = 610;
+THEN SET result = 608;
 
 /* start time in the past */
 ELSEIF addtime(pdate,pstart) < now()
-THEN SET result = 611;
+THEN SET result = 609;
 
 /* start time before opening time */
 ELSEIF  pstart < openTime 
-THEN SET result = 612;
+THEN SET result = 610;
 
 /* end time after closing time */
 ELSEIF  pend > closeTime 
-THEN SET result = 613;
+THEN SET result = 611;
 
 /*start time after end time */
 ELSEIF pend < pstart
-THEN SET result = 614;
+THEN SET result = 612;
 
 /*Booking must be 45/60/90 minutes*/
 ELSEIF TIMESTAMPDIFF(MINUTE,pstart,pend) NOT IN (45,60,75,90)
-THEN SET result = 615;
+THEN SET result = 613;
 
 /* Booking overlap*/
 ELSEIF Overlap_Bookings (pdate,pstart,pend,pcourt)
-THEN SET result = 616;
+THEN SET result = 614;
 
 /*More than 3 bookings in advance*/
 ELSEIF Advance_Bookings (pplayer) >= 3
-THEN SET result = 617;
+THEN SET result = 615;
 
 /*Unpaid*/
 ELSEIf Pending_Booking (pplayer)
-THEN SET result = 618;
+THEN SET result = 616;
 
-ELSE INSERT INTO booking (booking_id,date,startTime,endTime,court,city,center,player,timestamp) 
-values (pbooking,pdate,pstart,pend,pcourt,pcity,pcenter,pplayer,now());
+ELSE INSERT INTO booking (date,startTime,endTime,court,city,center,player,timestamp) 
+values (pdate,pstart,pend,pcourt,pcity,pcenter,pplayer,now());
 	SET result = 600;
 END IF;
 SELECT RESULT;
@@ -247,31 +238,28 @@ DELIMITER ;
 /* Cancel Booking */
 DROP PROCEDURE IF EXISTS cancelBooking;
 DELIMITER //
-CREATE PROCEDURE cancelBooking(in pbooking varchar(50),in pplayer varchar(50),out result int)
+CREATE PROCEDURE cancelBooking(in pbooking int,in pplayer varchar(50),out result int)
 BEGIN
-/*Invalid booking*/
-IF isValidId(pbooking) = 0 
-THEN SET result =701;
 
 /*Invalid player*/
-ELSEIF isValidId(pplayer) = 0 
-THEN SET result =702;
+IF isValidId(pplayer) = 0 
+THEN SET result =701;
 
 /* Booking id NOT exists */
 ELSEIF pbooking NOT IN (SELECT booking_id FROM booking)
-THEN SET result =703; 
+THEN SET result =702; 
 
 /* Player id NOT exists */
 ELSEIF pplayer NOT IN (	SELECT player_id FROM player)
-THEN SET result =704;
+THEN SET result =703;
 
 /* Booking NOT belong to Player*/
 ELSEIF NOT EXISTS (SELECT booking_id FROM booking WHERE booking_id = pbooking AND player = pplayer)
-THEN SET result =705;
+THEN SET result =704;
 
 /* less than 24h booking */
 ELSEIF 24h_Booking (pbooking,pplayer)
-THEN SET result =706;
+THEN SET result =705;
 
 ELSE DELETE FROM booking WHERE booking_id = pbooking AND player = pplayer ;
 	SET result =700;
@@ -283,45 +271,42 @@ DELIMITER ;
 /*Update Booking Status*/
 DROP PROCEDURE IF EXISTS updateBookingStatus;
 DELIMITER //
-CREATE PROCEDURE  updateBookingStatus(in pbooking varchar(50),in pstatus int,in pcity varchar(50),in pcenter varchar(50),in pstaff varchar(50),out result int)
+CREATE PROCEDURE  updateBookingStatus(in pbooking int,in pstatus int,in pcity varchar(50),in pcenter varchar(50),in pstaff varchar(50),out result int)
 BEGIN
-/*Invalid booking*/
-IF isValidId(pbooking) = 0 
-THEN SET result =801;
 
 /*Invalid city*/
-ELSEIF isValidId(pcity) = 0 
-THEN SET result =802;
+IF isValidId(pcity) = 0 
+THEN SET result =801;
 
 /*Invalid center*/
 ELSEIF isValidId(pcenter) = 0 
-THEN SET result =803;
+THEN SET result =802;
 
 /*Invalid staff*/
 ELSEIF isValidId(pstaff) = 0 
-THEN SET result =804;
+THEN SET result =803;
 
 /* Booking id NOT exists */
 ELSEIF pbooking NOT IN (
 	SELECT booking_id
     FROM booking)
-THEN SET result =805;
+THEN SET result =804;
 
 /* City id NOT exists */
 ELSEIF pcity NOT IN (SELECT city_id FROM city)
-THEN SET result =806;
+THEN SET result =805;
 
 /* Center id NOT exists */
 ELSEIF pcenter NOT IN (SELECT center_id FROM center WHERE city = pcity) 
-THEN SET result =807;
+THEN SET result =806;
 
 /*Booking NOT belong to center*/
 ELSEIF NOT EXISTS (SELECT booking_id FROM booking WHERE booking_id = pbooking AND center = pcenter)
-THEN SET result =808;
+THEN SET result =807;
 
 /*Staff id NOT exists */
 ELSEIF pstaff NOT IN (SELECT staff_id FROM staff WHERE city = pcity AND center = pcenter)
-THEN SET result =809;
+THEN SET result =808;
     
 ELSE UPDATE booking
 	SET booking_status = pstatus
@@ -421,15 +406,12 @@ DELIMITER ;
 
 DROP PROCEDURE IF EXISTS getBookingInfo;
 DELIMITER //
-CREATE PROCEDURE getBookingInfo(in pbooking varchar(50),out result int)
+CREATE PROCEDURE getBookingInfo(in pbooking int,out result int)
 BEGIN
-/*Invalid booking*/
-IF isValidId(pbooking) = 0 
-THEN SET result =1301;
 
 /*booking_id not exist */
-ELSEIF pbooking NOT IN (SELECT booking_id FROM booking)
-THEN SET result = 1302;
+IF pbooking NOT IN (SELECT booking_id FROM booking)
+THEN SET result = 1301;
 
 ELSE SELECT court,center,city,date,startTime as "Start Time" ,endTime as "End Time", player FROM booking;
 SET result = 1300;
@@ -437,8 +419,6 @@ END IF;
 SELECT result;
 END //
 DELIMITER ;
-
-
 
 DROP PROCEDURE IF EXISTS getCenterBooking;
 DELIMITER //
@@ -471,39 +451,6 @@ SET result = 1400;
 END IF;
 SELECT result;
 END //
-DELIMITER ;
-
-DROP PROCEDURE IF EXISTS getPlayerBookings;
-DELIMITER //
-CREATE PROCEDURE getPlayerBookings(in pdate date, in pplayer varchar(50), in pcity varchar(50),out result int)
-BEGIN
-/*Invalid city*/
-IF isValidId(pcity) = 0 
-THEN SET result =1501;
-
-/*Invalid player*/
-ELSEIF isValidId(pplayer) = 0 
-THEN SET result =1502;
-
-/*city NOT exist */
-ELSEIF pcity NOT IN (SELECT city_id FROM city)
-THEN SET result = 1503;
-
-/*player_Id NOT exist */
-ELSEIF pplayer NOT IN (SELECT player_id FROM player)
-THEN SET result = 1504;
-
-/*There is no booking in that date of that player in that city*/
-ELSEIF NOT EXISTS (SELECT * FROM booking WHERE date = pdate AND player = pplayer AND city = pcity )
-THEN SET result = 1505;
-
-ELSE SELECT court,center,city,date,startTime as "Start Time" ,endTime as "End Time", player 
-	FROM booking 
-	WHERE date = pdate AND player = pplayer AND city = pcity ;
-    SET result = 1500;
-END IF;
-SELECT result;
-END//
 DELIMITER ;
 
 DROP PROCEDURE IF EXISTS getCourtBooking;
@@ -545,3 +492,37 @@ END IF;
 SELECT result;
 END //
 DELIMITER ;
+
+DROP PROCEDURE IF EXISTS getPlayerBookings;
+DELIMITER //
+CREATE PROCEDURE getPlayerBookings(in pdate date, in pplayer varchar(50), in pcity varchar(50),out result int)
+BEGIN
+/*Invalid city*/
+IF isValidId(pcity) = 0 
+THEN SET result =1501;
+
+/*Invalid player*/
+ELSEIF isValidId(pplayer) = 0 
+THEN SET result =1502;
+
+/*city NOT exist */
+ELSEIF pcity NOT IN (SELECT city_id FROM city)
+THEN SET result = 1503;
+
+/*player_Id NOT exist */
+ELSEIF pplayer NOT IN (SELECT player_id FROM player)
+THEN SET result = 1504;
+
+/*There is no booking in that date of that player in that city*/
+ELSEIF NOT EXISTS (SELECT * FROM booking WHERE date = pdate AND player = pplayer AND city = pcity )
+THEN SET result = 1505;
+
+ELSE SELECT court,center,city,date,startTime as "Start Time" ,endTime as "End Time", player 
+	FROM booking 
+	WHERE date = pdate AND player = pplayer AND city = pcity ;
+    SET result = 1500;
+END IF;
+SELECT result;
+END//
+DELIMITER ;
+
