@@ -1,7 +1,7 @@
 package Server;
 
-import Database.MySqlRequest;
 import Server.API.Utils;
+import com.sun.net.httpserver.BasicAuthenticator;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
 
@@ -13,50 +13,80 @@ public class Main {
     public static int ServerPort = 8000;
     public static HttpServer httpServer;
 
-    public static void main(String[] args) throws IOException
-    {
-        System.out.println("Initializing Http Server at port " + String.valueOf(ServerPort));
+    public static void main(String[] args) throws IOException {
         InitializeServer();
+        System.out.println("Initialized Http Server");
 
-        System.out.println("Creating API Handler.");
-        CreateHandlerContext();
+        InitializeCreateBookingContext();
+        System.out.println("Initialized CreateBooking Context.");
 
+        InitializeGetCourtBookingContext();
+        System.out.println("Initialized GetCourtBooking Context.");
 
         httpServer.setExecutor(null); // creates a default executor
         httpServer.start();
         System.out.println("Http Server started at port " + String.valueOf(ServerPort));
-
-        MySqlRequest Request = new MySqlRequest();
-        //Request.GetAllCentersInCity("CityA");
     }
 
-    public static void InitializeServer()  throws IOException
-    {
+    public static void InitializeServer()  throws IOException {
         httpServer = HttpServer.create(new InetSocketAddress(ServerPort), 0);
     }
 
-    public static void CreateHandlerContext()
-    {
-        HttpContext context = httpServer.createContext("/api/createbooking");
-        context.setHandler( exchange ->
+    public static void InitializeCreateBookingContext() {
+        HttpContext Context = httpServer.createContext("/api/createbooking");
+        Context.setAuthenticator(new BasicAuthenticator("get") {
+            @Override
+            public boolean checkCredentials(String User, String SecretKey) {
+                return User.equals("user") && SecretKey.equals("123456");
+            }
+        });
+
+        Context.setHandler(Handler ->
         {
-            String RequestMethod = exchange.getRequestMethod().toString();
+            String RequestMethod = Handler.getRequestMethod().toString();
             if (RequestMethod.equals("POST")) {
+                String Request = Utils.ConvertRequestToString(Handler.getRequestBody());
 
-                String Request = Utils.ConvertRequestToString(exchange.getRequestBody());
+                String ResultString = RequestHandler.CreateBooking(Request);
 
+                String ResponseData = "Result=" + String.valueOf(ResultString);
 
-                int Result = RequestHandler.CreateBooking(Request);
-
-                String respText = String.valueOf(Result);
-
-                exchange.sendResponseHeaders(200, respText.getBytes().length);
-                OutputStream output = exchange.getResponseBody();
-                output.write(respText.getBytes());
+                Handler.sendResponseHeaders(200, ResponseData.getBytes().length);
+                OutputStream output = Handler.getResponseBody();
+                output.write(ResponseData.getBytes());
                 output.flush();
             }
-            else exchange.sendResponseHeaders(405, -1);// 405 Method Not Allowed
-            exchange.close();
+            else Handler.sendResponseHeaders(405, -1);// 405 Method Not Allowed
+            Handler.close();
+        });
+    }
+
+    public static void InitializeGetCourtBookingContext() {
+        HttpContext Context = httpServer.createContext("/api/getcourtbooking");
+        Context.setAuthenticator(new BasicAuthenticator("get") {
+            @Override
+            public boolean checkCredentials(String User, String SecretKey) {
+                return User.equals("user") && SecretKey.equals("123456");
+            }
+        });
+
+        Context.setHandler(Handler ->
+        {
+            String RequestMethod = Handler.getRequestMethod().toString();
+            if (RequestMethod.equals("GET")) {
+                String Request = Utils.ConvertRequestToString(Handler.getRequestBody());
+
+                String ResultString = RequestHandler.GetCourtBooking(Request);
+
+                String ResponseData =  "Result=" + String.valueOf(ResultString);
+
+                Handler.sendResponseHeaders(200, ResponseData.getBytes().length);
+                OutputStream output = Handler.getResponseBody();
+                output.write(ResponseData.getBytes());
+                output.flush();
+            }
+            else Handler.sendResponseHeaders(405, -1);// 405 Method Not Allowed
+            Handler.close();
         });
     }
 
