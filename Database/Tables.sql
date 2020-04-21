@@ -52,7 +52,7 @@ CREATE TABLE court(
 
 DROP TABLE IF EXISTS booking;
 CREATE TABLE booking(
-  booking_id varchar(50) NOT NULL PRIMARY KEY,
+  booking_id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
   date date NOT NULL,
   startTime time NOT NULL,
   endTime time NOT NULL,
