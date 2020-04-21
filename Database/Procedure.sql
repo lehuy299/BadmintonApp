@@ -505,3 +505,43 @@ END IF;
 SELECT result;
 END//
 DELIMITER ;
+
+DROP PROCEDURE IF EXISTS getCourtBooking;
+DELIMITER //
+CREATE PROCEDURE getCourtBooking(in pdate date,in pcourt varchar(50), in pcenter varchar(50), in pcity varchar(50),out result int)
+BEGIN
+/*Invalid city*/
+IF isValidId(pcity) = 0 
+THEN SET result =1601;
+
+/*Invalid center*/
+ELSEIF isValidId(pcenter) = 0 
+THEN SET result =1602;
+/*Invalid court*/
+ELSEIF isValidId(pcourt) = 0 
+THEN SET result =1603;
+
+/*city NOT exist */
+ELSEIF pcity NOT IN (SELECT city_id FROM city)
+THEN SET result = 1604;
+
+/* Center id NOT exists in that city */
+ELSEIF pcenter NOT IN (SELECT center_id FROM center WHERE city = pcity) 
+THEN SET result =1605;
+
+/* Court id NOT exists in that center */
+ELSEIF pcourt NOT IN (SELECT court_id FROM court WHERE city = pcity AND center = pcenter) 
+THEN SET result =1606;
+
+/*There is no booking in that center on that date*/
+ELSEIF NOT EXISTS (SELECT * FROM booking WHERE date = pdate AND center = pcenter AND city = pcity AND court = pcourt)
+THEN SET result = 1607;
+
+ELSE SELECT court,center,city,date,startTime as "Start Time" ,endTime as "End Time", player 
+	FROM booking 
+	WHERE date = pdate AND center = pcenter AND city = pcity AND court = pcourt ;
+SET result = 1600;
+END IF;
+SELECT result;
+END //
+DELIMITER ;
