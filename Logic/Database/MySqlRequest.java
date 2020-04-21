@@ -1,6 +1,11 @@
 package Database;
 
+import Structs.Booking;
+
 import java.sql.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MySqlRequest {
     private static String DB_URL = "jdbc:mysql://localhost:3306/booking_app";
@@ -21,6 +26,7 @@ public class MySqlRequest {
             Statement.setString(7, CourtID);
             Statement.setString(8, PlayerID);
             Statement.registerOutParameter(9, Types.INTEGER);
+            Statement.setQueryTimeout(10);
             Statement.execute();
 
             int ResultCode = Statement.getInt(9);
@@ -31,6 +37,41 @@ public class MySqlRequest {
             e.printStackTrace();
         }
         return -1;
+    }
+
+    public AbstractMap.SimpleEntry<Integer, List<Booking>> GetCourtBooking(Date Day, String CourtID, String CenterID, String CityID)
+    {
+        try {
+            CallableStatement Statement = CurrentConnection.GetProcedureStatement("{Call getCourtBooking(?,?,?,?,?)}");
+            Statement.setDate(1, Day);
+            Statement.setString(2, CourtID);
+            Statement.setString(3, CenterID);
+            Statement.setString(4, CityID);
+            Statement.registerOutParameter(5, Types.INTEGER);
+            Statement.setQueryTimeout(10);
+            Statement.execute();
+
+            int ResultCode = Statement.getInt(5);
+
+            List<Booking> Bookings = new ArrayList<Booking>();
+
+            ResultSet Result = Statement.getResultSet();
+            while (Result.next()) {
+                String OutCourtID = Result.getString("court");
+                Date OutDate = Result.getDate("date");
+                Time OutStartTime = Result.getTime("Start Time");
+                Time OutEndTime = Result.getTime("End Time");
+
+                Booking CurrentBooking = new Booking(OutCourtID, OutDate, OutStartTime, OutEndTime);
+                Bookings.add(CurrentBooking);
+            }
+
+            return new AbstractMap.SimpleEntry<>(ResultCode, Bookings);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void GetAllCentersInCity(String City)
