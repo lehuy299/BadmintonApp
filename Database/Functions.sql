@@ -91,7 +91,7 @@ DELIMITER ;
 /* Function check 24h booking for cancellation*/
 DROP FUNCTION IF EXISTS 24h_Booking;
 DELIMITER //
-CREATE FUNCTION 24h_Booking(pbooking varchar(50),pplayer varchar(50)) 
+CREATE FUNCTION 24h_Booking(pbooking int,pplayer varchar(50)) 
 RETURNS int DETERMINISTIC
 BEGIN
 DECLARE result int DEFAULT 0;
