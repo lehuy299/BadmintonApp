@@ -2,7 +2,7 @@
 
 ###  Team D
 
-### How do we handle the connection to the Databases?
-* __We will create the function when the Player booked successfully.We will give them the Booking Code to query the information of the player in the table booking and to confirm that whether is it a real customer or not.__
-* __We will use string of Booking Code, Player ID and TimeStamp to decrypt,then compare to the booking table that it is the same or not.__
-* __If the Booking Code is so long,then we can convert this into QR Code.__
+### Solution for Problem 1:
+* __The Logic-Tier will encrypt the BookingID + PlayerID + TimeStamp getting from the Database-Tier into the Booking Code.__
+* __The Booking Code is brought to the Present-Tier and the Present-Tier will deliver it to the Player.__
+* __When the Player want to confirm his booking, he will enter the Booking Code in the app or show it to the staff at the course. The Booking Code will be decrypted at the Logic-Tier in order to get the BookingID. With that BookingID, the information that linked with it will be withrawed from the Database.__
