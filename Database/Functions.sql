@@ -17,7 +17,7 @@ CREATE FUNCTION isValidName(pname varchar(50))
 RETURNS int DETERMINISTIC
 BEGIN
 DECLARE result int DEFAULT 0;
-SELECT pname REGEXP '^[a-zA-Z]' INTO result;
+SELECT pname REGEXP '^([a-zA-Z ]+)$' INTO result;
 RETURN result;
 END //
 DELIMITER ;
