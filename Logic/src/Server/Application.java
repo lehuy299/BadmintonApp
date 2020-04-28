@@ -2,6 +2,7 @@ package Server;
 
 import Database.MySqlConnection;
 import Server.API.Users.Handler.CreateBookingHandler;
+import Server.API.Users.Handler.GetAvalableSlotHandler;
 import Server.API.Users.Handler.GetCourtBookingHandler;
 import com.sun.net.httpserver.HttpServer;
 
@@ -32,6 +33,9 @@ public class Application {
             InitializeGetCourtBookingContext();
             System.out.println("Initialize GetCourtBooking Context.");
 
+            InitializeGetAvalableSlotContext();
+            System.out.println("Initialize GetAvalableSlot Context.");
+
             OpenMySqlConnection();
             System.out.println("Initialized MySql Connection.");
 
@@ -61,5 +65,10 @@ public class Application {
     public static void InitializeGetCourtBookingContext() {
         GetCourtBookingHandler GetCourtBookingHandler = new GetCourtBookingHandler("GET", ObjectMapper, GlobalExceptionHandler);
         httpServer.createContext("/api/users/getcourtbooking", GetCourtBookingHandler::Handle);
+    }
+
+    public static void InitializeGetAvalableSlotContext() {
+        GetAvalableSlotHandler GetAvalableSlotHandler = new GetAvalableSlotHandler("GET", ObjectMapper, GlobalExceptionHandler);
+        httpServer.createContext("/api/users/getavalableslot", GetAvalableSlotHandler::Handle);
     }
 }

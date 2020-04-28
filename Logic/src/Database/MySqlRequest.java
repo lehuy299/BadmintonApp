@@ -5,6 +5,8 @@ import Server.API.Users.Request.GetCourtBookingRequest;
 import Server.API.Users.Response.CreateBookingResponse;
 import Server.API.Users.Response.GetCourtBookingResponse;
 import Struct.Booking;
+import Struct.Center;
+import Struct.Court;
 
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
@@ -55,12 +57,11 @@ public class MySqlRequest {
 
             int ResultCode = Statement.getInt(5);
 
-            List<Booking> Bookings = null;
+            List<Booking> Bookings = new ArrayList<Booking>();
 
             ResultSet Result = Statement.getResultSet();
             if (Result.getRow() > 0)
             {
-                Bookings = new ArrayList<Booking>();
                 while (Result.next()) {
                     Booking CurrentBooking = new Booking();
                     CurrentBooking.CityID = Result.getString("city");
@@ -74,7 +75,6 @@ public class MySqlRequest {
                 }
             }
 
-
             GetCourtBookingResponse Response = new GetCourtBookingResponse(ResultCode);
             Response.Bookings = Bookings;
 
@@ -84,5 +84,71 @@ public class MySqlRequest {
             e.printStackTrace();
         }
         return new GetCourtBookingResponse(400);
+    }
+
+    public static ArrayList<Center> GetAllCenterInCity(String CityID)
+    {
+        try {
+            CallableStatement Statement = MySqlConnection.GetProcedureStatement("{Call getAllCitiesCenters(?,?)}");
+            Statement.setString(1, CityID);
+            Statement.registerOutParameter(2, Types.INTEGER);
+            Statement.setQueryTimeout(10);
+            Statement.execute();
+
+            int ResultCode = Statement.getInt(2);
+
+
+            ArrayList<Center> Centers = new ArrayList<>();
+
+            ResultSet Result = Statement.getResultSet();
+            if (Result.getRow() > 0)
+            {
+                while (Result.next()) {
+                    Center CurrentCenter = new Center();
+                    CurrentCenter.setCenterID( Result.getString("center_id"));
+                    CurrentCenter.setMinimumLength(Result.getInt("minimun_length"));
+                    Centers.add(CurrentCenter);
+                }
+            }
+
+            return Centers;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static ArrayList<Court> GetAllCourtInCenter(String CityID, String CenterID)
+    {
+        try {
+            CallableStatement Statement = MySqlConnection.GetProcedureStatement("{Call getAllCitiesCentersCourts(?,?,?)}");
+            Statement.setString(1, CityID);
+            Statement.setString(2, CenterID);
+            Statement.registerOutParameter(3, Types.INTEGER);
+            Statement.setQueryTimeout(10);
+            Statement.execute();
+
+            int ResultCode = Statement.getInt(3);
+
+            ArrayList<Court> Courts = null;
+
+            ResultSet Result = Statement.getResultSet();
+            if (Result.getRow() > 0)
+            {
+                Courts = new ArrayList<Court>();
+                while (Result.next()) {
+                    Court CurrentCourt = new Court();
+                    CurrentCourt.setCourtID( Result.getString("court_id"));
+                    Courts.add(CurrentCourt);
+                }
+            }
+
+            return Courts;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
