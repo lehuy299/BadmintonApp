@@ -199,3 +199,57 @@ END IF;
 SELECT RESULT;
 END //
 DELIMITER ;
+DROP PROCEDURE IF EXISTS getCityHoliday;
+DELIMITER //
+CREATE PROCEDURE getCityHoliday(in pcity varchar(50),out result int)
+BEGIN
+/*There is no city */
+IF pcity NOT IN (SELECT city_id FROM city)
+THEN SET result = 601;
+
+ELSE SELECT * FROM holidays;
+SET result = 600;
+END IF;
+SELECT result;
+END //
+DELIMITER ;
+call getCityHoliday("CityA",@a);
+
+DROP PROCEDURE IF EXISTS getCenterOpenTime;
+DELIMITER //
+CREATE PROCEDURE getCenterOpenTime(in pcenter varchar(50),in pcity varchar(50),out result int)
+BEGIN
+/*There is no city */
+IF pcity NOT IN (SELECT city_id FROM city)
+THEN SET result = 701;
+
+ELSEIF NOT EXISTS (SELECT * FROM center WHERE center_id = pcenter AND city = pcity)
+THEN SET result = 702;
+
+ELSE SELECT * FROM opening_times WHERE center = pcenter AND city = pcity;
+SET result = 700;
+END IF;
+SELECT result;
+END //
+DELIMITER ;
+call getCenterOpenTime("Center1","CityA",@a);
+
+DROP PROCEDURE IF EXISTS getCenterMin;
+DELIMITER //
+CREATE PROCEDURE getCenterMin(in pcenter varchar(50),in pcity varchar(50),out result int)
+BEGIN
+/*There is no city */
+IF pcity NOT IN (SELECT city_id FROM city)
+THEN SET result = 801;
+
+ELSEIF NOT EXISTS (SELECT * FROM center WHERE center_id = pcenter AND city = pcity)
+THEN SET result = 802;
+
+ELSE SELECT * FROM center WHERE center_id = pcenter AND city = pcity;
+SET result = 800;
+END IF;
+SELECT result;
+END //
+DELIMITER ;
+call getCenterMin("Center1","CityA",@a);
+
