@@ -38,7 +38,7 @@ DELIMITER ;
 DROP FUNCTION IF EXISTS Overlap_Bookings;
 DELIMITER //
 CREATE FUNCTION Overlap_Bookings(pdate date,pstart time, pend time,
-pcourt varchar(50)) 
+pcourt int) 
 RETURNS int DETERMINISTIC
 BEGIN
 DECLARE result int DEFAULT 0;
@@ -46,8 +46,8 @@ SELECT 1
 FROM booking
 WHERE court = pcourt
 AND date = pdate
-AND ((pstart <= startTime and pend > startTime)
-	OR (pstart >=startTime and pstart < endTime))
+AND ((pstart < startTime and pend >= startTime)
+	OR (pstart >= startTime and pstart < endTime))
 INTO result;
 RETURN result;
 END //
