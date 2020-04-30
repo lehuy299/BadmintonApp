@@ -366,6 +366,14 @@ DROP PROCEDURE IF EXISTS getAllCitiesCentersCourts;
 DELIMITER //
 CREATE PROCEDURE getAllCitiesCentersCourts(in pcity varchar(50),in pcenter varchar(50),out result int)
 BEGIN
+DECLARE count int;
+SELECT count(court_id)
+	FROM court as CO
+	JOIN center as CE on CE.center_id = CO.center
+    JOIN city as CI on CE.city = CI.city_id 
+    WHERE CI.name = pcity AND CE.name = pcenter
+INTO count;
+
 /*Invalid city*/
 IF isValidId(pcity) = 0 
 THEN SET result =1001;
@@ -386,6 +394,10 @@ ELSEIF NOT EXISTS (SELECT *
                    AND CE.name = pcenter)
 THEN SET result =1004;
 
+/*No court in that center*/
+ELSEIF count = 0
+THEN SET result = 1005;
+
 ELSE SELECT CO.court_id,CO.name,CE.name,CI.name 
 	FROM court as CO
 	JOIN center as CE on CE.center_id = CO.center
@@ -398,15 +410,19 @@ END //
 DELIMITER ;
 
 
-DROP PROCEDURE IF EXISTS getAllPlayers;
+DROP PROCEDURE IF EXISTS getPlayersInfo;
 DELIMITER //
-CREATE PROCEDURE getAllPlayers(out result int)
+CREATE PROCEDURE getPlayersInfo(in pplayer varchar(50),out result int)
 BEGIN
-/*There is no player */
-IF NOT EXISTS (SELECT * FROM player)
-THEN SET result = 1101;
+/*Invalid player*/
+IF isValidId(pplayer) = 0 
+THEN SET result =1101;
 
-ELSE SELECT * FROM player;
+/*Player do not exist*/
+ELSEIF pplayer NOT IN (SELECT player_id FROM player)
+THEN SET result = 1102;
+
+ELSE SELECT * FROM player WHERE player_id = pplayer;
 SET result = 1100;
 END IF;
 SELECT result;
