@@ -96,9 +96,12 @@ call getAllCitiesCentersCourts("CityA","4!@$",@a);/*Invalid center_id*//*1002*/
 call getAllCitiesCentersCourts("CityA","Center1",@a);/*Success*//*1000*/
 call getAllCitiesCentersCourts("CityG","Center3",@a);/*City not exist*//*1003*/
 call getAllCitiesCentersCourts("CityB","Center2",@a);/*Center_id not exist in that city*//*1004*/
+call getAllCitiesCentersCourts("CityB","Center1",@a);/*No court in that center*//*1005*/
 
-/*Get all players*/
-call getAllPlayers(@a);
+/*Get  players info */
+call getPlayersInfo("Player1",@a);/*Success*//*1100*/
+call getPlayersInfo("!@#",@a);/*invalid player id*//*1101*/
+call getPlayersInfo("Player4",@a);/*Not exist*//*1102*/
 
 /*Get Booking Info*/
 call getBookingInfo(1,@a);/*Success*//*1200*/
