@@ -1,6 +1,6 @@
 package Server.API.Users.Handler;
 
-import Database.MySqlRequest;
+import Database.Request.GetCourtBookingSql;
 import Server.API.Constants;
 import Server.API.Handler;
 import Server.API.ResponseEntity;
@@ -21,7 +21,7 @@ public class GetCourtBookingHandler extends Handler {
     protected ResponseEntity<GetCourtBookingResponse> DoPost(InputStream InputStream) {
         GetCourtBookingRequest GetCourtBookingRequest = super.ReadRequest(InputStream, GetCourtBookingRequest.class);
 
-        GetCourtBookingResponse GetCourtBookingResponse = MySqlRequest.GetCourtBooking(GetCourtBookingRequest);
+        GetCourtBookingResponse GetCourtBookingResponse = GetCourtBookingSql.Get(GetCourtBookingRequest);
 
         return new ResponseEntity<>(StatusCode.OK, GetHeaders(Constants.ContentType, Constants.ApplicationJSON), GetCourtBookingResponse);
     }

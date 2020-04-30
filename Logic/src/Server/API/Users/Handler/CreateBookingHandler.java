@@ -1,6 +1,6 @@
 package Server.API.Users.Handler;
 
-import Database.MySqlRequest;
+import Database.Request.CreateBookingSql;
 import Server.API.Constants;
 import Server.API.Handler;
 import Server.API.ResponseEntity;
@@ -21,7 +21,7 @@ public class CreateBookingHandler extends Handler {
     protected ResponseEntity<CreateBookingResponse> DoPost(InputStream InputStream) {
         CreateBookingRequest CreateBookingRequest = ReadRequest(InputStream, CreateBookingRequest.class);
 
-        CreateBookingResponse CreateBookingResponse = MySqlRequest.CreateBooking(CreateBookingRequest);
+        CreateBookingResponse CreateBookingResponse = CreateBookingSql.Create(CreateBookingRequest);
 
         return new ResponseEntity<>(StatusCode.OK, GetHeaders(Constants.ContentType, Constants.ApplicationJSON), CreateBookingResponse);
     }

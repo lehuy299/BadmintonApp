@@ -2,10 +2,10 @@ package Server.API.Users.Response;
 
 import Struct.Booking;
 
-import java.util.List;
+import java.util.*;
 
 public class GetCourtBookingResponse {
-    public GetCourtBookingResponse(int ResultCode) { this.ResultCode = ResultCode; }
+    public GetCourtBookingResponse(int ResultCode) { this.ResultCode = ResultCode; this.Bookings = new ArrayList<>(); }
     public int ResultCode;
-    public List<Booking> Bookings;
+    public ArrayList<Booking> Bookings;
 }

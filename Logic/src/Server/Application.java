@@ -1,7 +1,9 @@
 package Server;
 
 import Database.MySqlConnection;
+import Server.API.Users.Handler.CancelBookingHandler;
 import Server.API.Users.Handler.CreateBookingHandler;
+import Server.API.Users.Handler.GetAvalableSlotHandler;
 import Server.API.Users.Handler.GetCourtBookingHandler;
 import com.sun.net.httpserver.HttpServer;
 
@@ -24,16 +26,13 @@ public class Application {
         try
         {
             InitializeServer();
-            System.out.println("Initialized Http Server.");
 
             InitializeCreateBookingContext();
-            System.out.println("Initialized CreateBooking Context.");
-
             InitializeGetCourtBookingContext();
-            System.out.println("Initialize GetCourtBooking Context.");
+            InitializeGetAvalableSlotContext();
+            InitializeCancelBookingContext();
 
             OpenMySqlConnection();
-            System.out.println("Initialized MySql Connection.");
 
             httpServer.setExecutor(null); // creates a default executor
             httpServer.start();
@@ -47,19 +46,35 @@ public class Application {
 
     public static void InitializeServer()  throws IOException {
         httpServer = HttpServer.create(new InetSocketAddress(ServerPort), 0);
+        System.out.println("Initialized Http Server.");
     }
 
     public static void OpenMySqlConnection() throws SQLException, ClassNotFoundException {
         MySqlConnection.OpenConnection(DbUrl, DbUsername, DbPassword);
+        System.out.println("Initialized MySql Connection.");
     }
 
     public static void InitializeCreateBookingContext() {
         CreateBookingHandler CreateBookingHandler = new CreateBookingHandler("POST", ObjectMapper, GlobalExceptionHandler);
         httpServer.createContext("/api/users/createbooking", CreateBookingHandler::Handle);
+        System.out.println("Initialized CreateBooking Context.");
     }
 
     public static void InitializeGetCourtBookingContext() {
         GetCourtBookingHandler GetCourtBookingHandler = new GetCourtBookingHandler("GET", ObjectMapper, GlobalExceptionHandler);
         httpServer.createContext("/api/users/getcourtbooking", GetCourtBookingHandler::Handle);
+        System.out.println("Initialize GetCourtBooking Context.");
+    }
+
+    public static void InitializeGetAvalableSlotContext() {
+        GetAvalableSlotHandler GetAvalableSlotHandler = new GetAvalableSlotHandler("GET", ObjectMapper, GlobalExceptionHandler);
+        httpServer.createContext("/api/users/getavalableslot", GetAvalableSlotHandler::Handle);
+        System.out.println("Initialize GetAvalableSlot Context.");
+    }
+
+    public static void InitializeCancelBookingContext() {
+        CancelBookingHandler CancelBookingHandler = new CancelBookingHandler("POST", ObjectMapper, GlobalExceptionHandler);
+        httpServer.createContext("/api/users/cancelbooking", CancelBookingHandler::Handle);
+        System.out.println("Initialize CancelBooking Context.");
     }
 }
