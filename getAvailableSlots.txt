@@ -1,0 +1,18 @@
+Court[] CourtList // List of court in city
+SlotList[] SlotsList // List of return slotsList
+Time OpeningTime = 07:00:00; //Center opening time
+Time ClosingTime = 21:00:00; //Center closing time
+Time MinumumTime = 00:45:00; //Minimum time for one booking slot
+
+for Court in CourtList:
+	if (Court.Bookings.Count > 0):
+		for i:=0 to Court.Bookings.Count:
+			if (i == 0 and Court.Bookings[i].StartTime - OpeningTime >= MinumumTime):
+				SlotsList <- Slot(Court.ID, Court.CenterID, Court.CityID, OpeningTime, Court.Bookings[i].StartTime)
+			if (i == Count.Bookings.Count - 1 and ClosingTime - Count.Bookings[i].EndTime >= MinumumTime):
+				SlotsList <- Slot(Court.ID, Court.CenterID, Court.CityID, Court.Bookings[i].StartTime, ClosingTime)
+			if (i < Count.Bookings.Count - 1 and Court.Bookings[i+1].StartTime - Court.Bookings[i].EndTime >= MinumumTime):
+				SlotsList <- Slot(Court.ID, Court.CenterID, Court.CityID, Court.Bookings[i].EndTime, Court.Bookings[i+1].StartTime)
+	else:
+		SlotsList <- Slot(Court.ID, Court.CenterID, Court.CityID, OpeningTime, ClosingTime)
+return SlotsList;
